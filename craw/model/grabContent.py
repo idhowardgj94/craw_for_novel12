@@ -15,11 +15,15 @@ class grabContent(object):
         #data: indexData
         self.data = data
         self.titleNumber = list()
-        self.contentsData = contentData()
-        for chapter, link in data.links.items():
-                self.contentsData.addChapter(chapter, self.grabContentText(chapter,
-                            data.links[chapter]))
+
+
+    def grabAllContent(self):
+        contentsData = contentData()
+        for chapter, link in self.data.links.items():
+                contentsData.addChapter(chapter, self.grabContentText(chapter,
+                            self.data.links[chapter]))
                 print(chapter, ' done!')
+        return contentsData
     def grabContentText(self, chapter, url):
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'lxml')

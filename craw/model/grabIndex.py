@@ -26,6 +26,7 @@ class grabIndex(object):
         execTable = {'Title':getTitle, 'author':self.getauthor, 'Genres':self.getGenres,
                     'Series': self.getSeries, 'Published':self.getPublished}
         '''
+        INTRO = 'intro'
         matchTable = {'Title':'title', 'Author': 'author', 'Genres': 'genres',
                     'Series': 'series', 'Published': 'published'}
 
@@ -38,12 +39,11 @@ class grabIndex(object):
         try to store book intro with html tag,
         compare which way is better way
         '''
-        setattr(ret, intro, self.sop.find('div', 'mota'))
+        setattr(ret, INTRO, self.soup.find('div', 'mota').get_text())
 
         for item in infoTable:
             #print(item)
             key=item.findChild('span').string.strip(' :')
-            print(type(key))
             if key is not None:
                 if key == 'Published':
                     value = item.findChildren('span')[1].string

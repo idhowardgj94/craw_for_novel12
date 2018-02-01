@@ -16,23 +16,22 @@ book.add_author('Danko Bananko', file_as='Gospodin Danko Bananko', role='ill', u
 
 # create chapter
 c1 = epub.EpubHtml(title='Intro', file_name='chap_01.xhtml', lang='hr')
-c1.content=u'<h1>Intro heading</h1><p>Zaba je skocila u baru.</p>'
-
+#c1.content=u'<h1>Intro heading</h1><p>Zaba je skocila u baru.</p>'
+c1.content=u'hi'
+print(c1.content)
 # add chapter
 book.add_item(c1)
 
 # define Table Of Contents
-'''
+
 book.toc = (
 epub.Link('chap_01.xhtml', 'Introduction', 'intro'),
 (epub.Section('Simple book'),(c1,c1 ))
 )
-'''
-print(type(c1.file_name))
 
-'''start from here~~~~'''
 
-book.toc=(epub.Link(c1.file_name))
+
+
 # add default NCX and Nav file
 book.add_item(epub.EpubNcx())
 book.add_item(epub.EpubNav())
