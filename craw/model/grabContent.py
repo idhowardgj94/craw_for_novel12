@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from craw.dataLayer.contentData import contentData
-
+import sys
 class grabContent(object):
     '''
     use to grab the content of story in nove112
@@ -28,11 +28,13 @@ class grabContent(object):
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'lxml')
         article = soup.find('div', 'content wl')
-        contents = article.find('div', 'adsfooter').findAllNext('p')
-
+        contents = article.find('div', 'adsfooter').findAllNext('p')[1]
+        # contents = article.findAll('p')[1];
+        # print(contents);
         completedContent = list()
-        for content in contents[1].stripped_strings:
-            completedContent.append(content)
-            completedContent.append("\n\n")
-            #print(content)
+        for content in contents.children:
+            # print(content.string);
+            completedContent.append(str(content));
+
+        # print(type(contents))
         return ''.join(completedContent)

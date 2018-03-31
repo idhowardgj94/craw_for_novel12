@@ -6,7 +6,7 @@ def main():
     a=craw('https://novel12.com/241169/cirque-du-freak.htm')
     a.grabIndex()
     a.grabFromChapter()
-    a.outputToTxt()
+    a.outputToEpub()
 
 if __name__ == '__main__':
     main()
