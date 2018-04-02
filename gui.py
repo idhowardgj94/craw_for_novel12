@@ -15,8 +15,15 @@ Last edited: August 2017
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from PyQt5.QtCore import QDir, Qt, QPointF, QPoint
+from PyQt5.QtCore import *
 from costomWidget.buttonForSearchPath import searchButton
+from craw.craw import craw
+import threading
+class Stream(QObject):
+    newText = pyqtSignal(str)
+
+    def write(self, text):
+        self.newText.emit(str(text))
 
 class applicationGUI(QWidget):
 
@@ -35,12 +42,22 @@ class applicationGUI(QWidget):
         self.setTextEdit()
         self.setWindowTitle('craw practice by Howard Chang')
         # self.setLayout(self.layout);
+        #
+
         self.show()
+    def onUpdateText(self, text):
+        cursor = self.editor.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        cursor.insertText(text)
+        self.editor.setTextCursor(cursor)
+        self.editor.ensureCursorVisible()
     def setTextEdit(self):
-        editor = QTextEdit()
-        editor.setPlainText("log...")
-        editor.readOnly = True
-        self.layout.addWidget(editor, 2, 0, 2,2)
+        self.editor = QTextEdit()
+        self.editor.setPlaceholderText("log....")
+        self.editor.readOnly = True
+        self.layout.addWidget(self.editor, 2, 0, 2,2)
+        # 改寫stdout的副程式成Stream
+        sys.stdout = Stream(newText=self.onUpdateText)
 
     def setForm(self):
         formGroupBox = QGroupBox("action")
@@ -65,11 +82,22 @@ class applicationGUI(QWidget):
             msg.setText("please check your config form\n every form need to be written");
             msg.setWindowTitle("warning")
             msg.setStandardButtons(QMessageBox.Ok)
-            msg.buttonClicked.connect(self.check)
+            msg.buttonClicked.connect(self.handleMessage)
             retval = msg.exec_()
+        else:
+            self.timer_evt = threading.Event()
+            threading.Thread(target=self.crawThread, name="_proc").start()
 
-        pass
-    def check(self, i):
+    def crawThread(self):
+        crawObject = craw(self.url.text())
+        crawObject.grabIndex()
+        crawObject.grabFromChapter()
+        if ".pub" in self.fileName.text():
+            save = self.fileName.text()
+        else:
+            save = self.fileName.text() + ".epub"
+        crawObject.outputToEpub(self.path.line.text(), save)
+    def handleMessage(self, i):
         print(i.text())
 
     def setTopic(self):

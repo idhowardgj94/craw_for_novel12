@@ -19,7 +19,7 @@ class searchButton(QGridLayout):
         options=QFileDialog.Options()
         # 下面那句等同於 options = options|QFILE....，是or運算
         # options type 是一個使用or做運算的flag
-        options |= QFileDialog.DontUseNativeDialog
+        # options |= QFileDialog.DontUseNativeDialog
         options |= QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self.parent,"select directory", os.getcwd(), options=options)
         if directory:

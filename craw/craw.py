@@ -33,7 +33,8 @@ class craw(object):
         print('series: ', self.index.series)
         return self.index
     def outputToEpub(self, path = None , fileName=None):
+        # print("in output path: " + path + " fileName: " + fileName)
         idxData = self.index
         conData = self.contentsData
-        outObj = toEpub(idxData, conData)
+        outObj = toEpub(idxData, conData, fileName, path)
         outObj.output()

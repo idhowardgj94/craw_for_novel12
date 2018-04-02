@@ -23,7 +23,8 @@ class toEpub(object):
         if fileName is None:
             self.fileName = idxData.title
         else:
-            self.fileName = idxData.title
+            self.fileName = fileName
+
         self.idxData = idxData
         self.conData = conData
     def output(self):
@@ -71,4 +72,4 @@ class toEpub(object):
 
         # add CSS file
         book.add_item(nav_css)
-        epub.write_epub(self.path+'\\' + self.fileName+'.epub' , book, {})
+        epub.write_epub(self.path+'\\' + self.fileName , book, {})
