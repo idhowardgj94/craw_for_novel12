@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import QDir, Qt, QPointF, QPoint
@@ -23,6 +24,4 @@ class searchButton(QGridLayout):
         options |= QFileDialog.ShowDirsOnly
         directory = QFileDialog.getExistingDirectory(self.parent,"select directory", os.getcwd(), options=options)
         if directory:
-            print(type(directory))
-            print(directory)
             self.line.setText(directory)

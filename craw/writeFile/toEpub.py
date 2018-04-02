@@ -21,7 +21,7 @@ class toEpub(object):
             self.path = path
 
         if fileName is None:
-            self.fileName = idxData.title
+            self.fileName = idxData.title + ".epub"
         else:
             self.fileName = fileName
 

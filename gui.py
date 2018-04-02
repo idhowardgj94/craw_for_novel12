@@ -13,6 +13,7 @@ Last edited: August 2017
 """
 
 import sys
+import re
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
@@ -62,7 +63,8 @@ class applicationGUI(QWidget):
     def setForm(self):
         formGroupBox = QGroupBox("action")
         layout = QFormLayout()
-        self.url=QLineEdit()
+        self.url=QTextEdit()
+        self.url.setPlaceholderText("you can use multiple website, use\",\" to split than");
         layout.addRow(QLabel("url(full, only novel112): "), self.url);
         self.fileName=QLineEdit()
         layout.addRow(QLabel("file Name: "), self.fileName);
@@ -74,8 +76,9 @@ class applicationGUI(QWidget):
         formGroupBox.setLayout(layout)
         self.layout.addWidget(formGroupBox, 1,0)
     def handleConfirm(self):
-        checkNull = [self.url.text(), self.fileName.text(), self.path.line.text()]
+        checkNull = [self.url.toPlainText(),  self.path.line.text()]
         isConfirm = all(val for val in checkNull)
+
         if(not isConfirm):
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
@@ -89,14 +92,18 @@ class applicationGUI(QWidget):
             threading.Thread(target=self.crawThread, name="_proc").start()
 
     def crawThread(self):
-        crawObject = craw(self.url.text())
-        crawObject.grabIndex()
-        crawObject.grabFromChapter()
-        if ".pub" in self.fileName.text():
-            save = self.fileName.text()
-        else:
-            save = self.fileName.text() + ".epub"
-        crawObject.outputToEpub(self.path.line.text(), save)
+        for val in re.split(r'[;,\s\n]\s*\n*', self.url.toPlainText()):
+            # print(val)
+            crawObject = craw(val)
+            crawObject.grabIndex()
+            crawObject.grabFromChapter()
+            if self.fileName.text() == '':
+                save=None
+            elif ".pub" in self.fileName.text():
+                save = self.fileName.text()
+            else:
+                save = self.fileName.text() + ".epub"
+            crawObject.outputToEpub(self.path.line.text(), save)
     def handleMessage(self, i):
         print(i.text())
 
@@ -112,9 +119,7 @@ class applicationGUI(QWidget):
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
         self.move(qr.topLeft())
-
-
-
+    # def closeEvent(self, event):
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
