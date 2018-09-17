@@ -19,11 +19,12 @@ class TestCrawler(object):
         url = test.get_url()
         assert url == 'www.yahoo.com.tw'
 
-    def wait_test_grab_info(self):
+    def test_grab_info(self):
+        result = {'Author': 'Darren Shan', 'Genres': 'Young Adult',
+                  'Series': 'The Saga of Darren Shan #1', 'Published': '4 January 2000'}
         test = Crawler()
-        a = test.grab_index('https://novel12.com/241169/cirque-du-freak.htm')
-        # print(a)
-        assert False
+        a = test.grab_info('https://novel12.com/241169/cirque-du-freak.htm')
+        assert result == a.get_info()
 
 
 class TestInformation(object):
@@ -40,13 +41,13 @@ class TestInformation(object):
         result = {'Author': 'Darren Shan', 'Genres': 'Young Adult',
                   'Series': 'The Saga of Darren Shan #1', 'Published': '4 January 2000'}
         self.set_up()
-        self.__information.try_to_get_info_from_ul(
+        self.__information._try_to_get_info_from_ul(
             self.__soup.find(string=re.compile('Author')))
         assert result == self.__information.get_info()
 
     def test_trim_text(self):
         self.set_up()
-        text = self.__information.trim_text('Author :')
+        text = self.__information._trim_text('Author :')
         print(text)
         assert text == 'Author'
     # **************************************************
@@ -55,5 +56,5 @@ class TestInformation(object):
     def wait_test_get_info(self):
         self.set_up()
         test = Information(self.__soup)
-        info = test.get_info()
+        info = test._get_info()
         assert info['Author'] == 'Darren Shan'
